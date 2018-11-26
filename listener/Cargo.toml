@@ -1,0 +1,8 @@
+[package]
+name = "listener"
+version = "0.1.0"
+authors = ["Bart Feenstra <bart@mynameisbart.com>"]
+
+[dependencies]
+argparse = "0.2.2"
+serial = "0.4.0"
