@@ -27,8 +27,8 @@ fn main() {
     let header = b'~';
     let mut header_buffer: [u8; 1] = [0];
     let mut packet_buffer: [u8; 3] = [0, 0, 0];
-    let mut movement: u8 = 0;
-    let mut luminosity: u16 = 0;
+    let mut movement: u8;
+    let mut luminosity: u16;
     loop {
         if let Err(_) = port.read_exact(&mut header_buffer) {
             // Ignore errors for now.
