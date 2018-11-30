@@ -2,7 +2,13 @@
 name = "listener"
 version = "0.1.0"
 authors = ["Bart Feenstra <bart@mynameisbart.com>"]
+build = "build.rs"
 
 [dependencies]
 argparse = "0.2.2"
+protobuf = "2.2.0"
 serial = "0.4.0"
+
+[build-dependencies]
+protoc = "2.2.0"
+protoc-rust = "2.2.0"

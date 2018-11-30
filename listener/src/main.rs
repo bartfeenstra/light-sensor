@@ -1,9 +1,13 @@
 extern crate argparse;
+extern crate protobuf;
 extern crate serial;
 
 use argparse::{ArgumentParser, Store};
+use protobuf::parse_from_reader;
 use serial::prelude::*;
 use std::io::Read;
+
+pub mod telemetry;
 
 fn main() {
     // Gather configuration.
@@ -23,29 +27,5 @@ fn main() {
         Ok(())
     }).unwrap();
 
-    // Listen to incoming data.
-    let header = b'~';
-    let mut header_buffer: [u8; 1] = [0];
-    let mut packet_buffer: [u8; 3] = [0, 0, 0];
-    let mut movement: u8;
-    let mut luminosity: u16;
-    loop {
-        if let Err(_) = port.read_exact(&mut header_buffer) {
-            // Ignore errors for now.
-            continue;
-        }
-        if header_buffer[0] != header {
-            // Skip unexpected bytes.
-            continue;
-        }
-        if let Err(_) = port.read_exact(&mut packet_buffer) {
-            // Ignore errors for now.
-            continue;
-        }
-        movement = packet_buffer[0];
-        luminosity = packet_buffer[1] as u16 + ((packet_buffer[2] as u16) << 8);
-        println!("PACKET:");
-        println!("Movement: {:?}", movement);
-        println!("Luminosity: {:?}", luminosity);
-    }
+    let parsed = parse_from_reader::<telemetry::Telemetry>(&mut port);
 }
