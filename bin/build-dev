@@ -4,6 +4,30 @@ set -Eeuo pipefail
 
 cd `dirname "$0"`/..
 
+# Build the Arduino sensor.
+(
+    cd ./sensor
+    mkdir -p vendor
+    NANOPB_VERSION=0.3.9.2
+    if [ ! -d ./vendor/nanopb ]; then
+        # Download Nanopb.
+        wget -O ./vendor/nanopb.tar.gz "https://jpa.kapsi.fi/nanopb/download/nanopb-$NANOPB_VERSION-linux-x86.tar.gz"
+        mkdir -p ./vendor/nanopb
+        tar -C ./vendor/nanopb --strip-components 1 -xzf ./vendor/nanopb.tar.gz
+        rm ./vendor/nanopb.tar.gz
+
+        # Configure Nanopb as an Arduino sketch library.
+        mkdir -p ./sketch/Libraries/Nanopb
+        cp ./vendor/nanopb/*.c ./sketch/Libraries/Nanopb/
+        cp ./vendor/nanopb/*.h ./sketch/Libraries/Nanopb/
+    fi
+    (
+        cd ..
+        ./sensor/vendor/nanopb/generator-bin/protoc --nanopb_out=./sensor/sketch telemetry.proto
+    )
+)
+
+# Build the Rust listener.
 (
     cd ./listener
     cargo build

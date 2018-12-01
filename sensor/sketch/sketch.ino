@@ -1,3 +1,7 @@
+#include <pb_encode.h>
+#include <pb_common.h>
+#include <pb.h>
+
 byte INPUT_MOVEMENT = 3;
 byte INPUT_LUMINOSITY = 0;
 byte HEADER = 0x7E;
