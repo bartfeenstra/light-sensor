@@ -1,28 +1,30 @@
+#include "telemetry.pb.h"
+
 #include <pb_encode.h>
 #include <pb_common.h>
 #include <pb.h>
 
 byte INPUT_MOVEMENT = 3;
 byte INPUT_LUMINOSITY = 0;
-byte HEADER = 0x7E;
-byte packet[4] = {HEADER};
 
 void setup() {
   pinMode(INPUT_MOVEMENT, INPUT);
   pinMode(LED_BUILTIN, OUTPUT);
   Serial.begin(9600);
-  // Ensure the USB serial port is connected.
+  // Do nothing (but wait) until the USB serial port is connected.
   while (!Serial) {
     ;
   }
 }
 
 void loop() {
-  byte movement = digitalRead(INPUT_MOVEMENT);
-  int luminosity = analogRead(INPUT_LUMINOSITY);
-  packet[1] = movement;
-  packet[2] = luminosity & 255;
-  packet[3] = luminosity >> 8 & 255;
-  Serial.write(packet, sizeof(packet));
+  Telemetry telemetry = Telemetry_init_zero;
+  telemetry.movement = digitalRead(INPUT_MOVEMENT);
+  telemetry.luminosity = analogRead(INPUT_LUMINOSITY);
+  uint8_t buffer[Telemetry_size];
+  pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
+  if (pb_encode(&stream, Telemetry_fields, &telemetry)) {
+    Serial.write(buffer, stream.bytes_written);
+  }
   delay(100);
 }
