@@ -1,0 +1,6 @@
+syntax = "proto2";
+
+message Telemetry {
+    required bool movement = 1;
+    required int32 luminosity = 2;
+}
