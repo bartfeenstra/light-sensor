@@ -24,8 +24,8 @@ use protobuf::ProtobufEnum as ProtobufEnum_imported_for_functions;
 #[derive(PartialEq,Clone,Default)]
 pub struct Telemetry {
     // message fields
-    pub movement: bool,
-    pub luminosity: i32,
+    movement: ::std::option::Option<bool>,
+    luminosity: ::std::option::Option<i32>,
     // special fields
     pub unknown_fields: ::protobuf::UnknownFields,
     pub cached_size: ::protobuf::CachedSize,
@@ -36,39 +36,53 @@ impl Telemetry {
         ::std::default::Default::default()
     }
 
-    // bool movement = 1;
+    // required bool movement = 1;
 
     pub fn clear_movement(&mut self) {
-        self.movement = false;
+        self.movement = ::std::option::Option::None;
+    }
+
+    pub fn has_movement(&self) -> bool {
+        self.movement.is_some()
     }
 
     // Param is passed by value, moved
     pub fn set_movement(&mut self, v: bool) {
-        self.movement = v;
+        self.movement = ::std::option::Option::Some(v);
     }
 
     pub fn get_movement(&self) -> bool {
-        self.movement
+        self.movement.unwrap_or(false)
     }
 
-    // int32 luminosity = 2;
+    // required int32 luminosity = 2;
 
     pub fn clear_luminosity(&mut self) {
-        self.luminosity = 0;
+        self.luminosity = ::std::option::Option::None;
+    }
+
+    pub fn has_luminosity(&self) -> bool {
+        self.luminosity.is_some()
     }
 
     // Param is passed by value, moved
     pub fn set_luminosity(&mut self, v: i32) {
-        self.luminosity = v;
+        self.luminosity = ::std::option::Option::Some(v);
     }
 
     pub fn get_luminosity(&self) -> i32 {
-        self.luminosity
+        self.luminosity.unwrap_or(0)
     }
 }
 
 impl ::protobuf::Message for Telemetry {
     fn is_initialized(&self) -> bool {
+        if self.movement.is_none() {
+            return false;
+        }
+        if self.luminosity.is_none() {
+            return false;
+        }
         true
     }
 
@@ -81,14 +95,14 @@ impl ::protobuf::Message for Telemetry {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_bool()?;
-                    self.movement = tmp;
+                    self.movement = ::std::option::Option::Some(tmp);
                 },
                 2 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     let tmp = is.read_int32()?;
-                    self.luminosity = tmp;
+                    self.luminosity = ::std::option::Option::Some(tmp);
                 },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
@@ -102,11 +116,11 @@ impl ::protobuf::Message for Telemetry {
     #[allow(unused_variables)]
     fn compute_size(&self) -> u32 {
         let mut my_size = 0;
-        if self.movement != false {
+        if let Some(v) = self.movement {
             my_size += 2;
         }
-        if self.luminosity != 0 {
-            my_size += ::protobuf::rt::value_size(2, self.luminosity, ::protobuf::wire_format::WireTypeVarint);
+        if let Some(v) = self.luminosity {
+            my_size += ::protobuf::rt::value_size(2, v, ::protobuf::wire_format::WireTypeVarint);
         }
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -114,11 +128,11 @@ impl ::protobuf::Message for Telemetry {
     }
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        if self.movement != false {
-            os.write_bool(1, self.movement)?;
+        if let Some(v) = self.movement {
+            os.write_bool(1, v)?;
         }
-        if self.luminosity != 0 {
-            os.write_int32(2, self.luminosity)?;
+        if let Some(v) = self.luminosity {
+            os.write_int32(2, v)?;
         }
         os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
@@ -162,12 +176,12 @@ impl ::protobuf::Message for Telemetry {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeBool>(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeBool>(
                     "movement",
                     |m: &Telemetry| { &m.movement },
                     |m: &mut Telemetry| { &mut m.movement },
                 ));
-                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
                     "luminosity",
                     |m: &Telemetry| { &m.luminosity },
                     |m: &mut Telemetry| { &mut m.luminosity },
@@ -214,8 +228,8 @@ impl ::protobuf::reflect::ProtobufValue for Telemetry {
 
 static file_descriptor_proto_data: &'static [u8] = b"\
     \n\x0ftelemetry.proto\"G\n\tTelemetry\x12\x1a\n\x08movement\x18\x01\x20\
-    \x01(\x08R\x08movement\x12\x1e\n\nluminosity\x18\x02\x20\x01(\x05R\nlumi\
-    nosityb\x06proto3\
+    \x02(\x08R\x08movement\x12\x1e\n\nluminosity\x18\x02\x20\x02(\x05R\nlumi\
+    nosity\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {
